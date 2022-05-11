@@ -49,11 +49,6 @@ y_test = y_test*(10**6)
 
 model = load_model('model.h5')
 
-dc = st.text_input('Pick a number')
-st.text_input('Pick a number')
-st.text_input('Pick a number')
-st.text_input('Pick a number')
-st.text_input('Pick a number')
 
 st.subheader('Working With the Neural Network')
 
