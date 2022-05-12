@@ -12,10 +12,13 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C, RationalQuadratic as RQ, WhiteKernel, \
     ExpSineSquared as Exp, DotProduct as Lin
+from sklearn.svm import SVR
+from sklearn.multioutput import MultiOutputRegressor
 
 from keras.models import load_model
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
+from sklearn.tree import DecisionTreeRegressor
 
 st.set_page_config(layout="wide")
 
@@ -99,6 +102,33 @@ def gaussian_regression_model():
     st.write("Aspect Ratios are:", predictions * 2)
 
 
+def svr():
+    svrregressor = SVR()
+    mulregressor = MultiOutputRegressor(svrregressor)
+    mulregressor.fit(X_train_scaled, y_train)
+
+    arr = np.array([[dc, ft, f3, Vcm, pdiss]])
+    test_user_scaled = scaler.transform(arr)
+
+    predictions = mulregressor.predict(test_user_scaled)
+    st.subheader('Prediction from SVR')
+    st.write("Predicted Values are:", predictions)
+    st.write("Aspect Ratios are:", predictions * 2)
+
+
+def decision_tree_regressor():
+    tree = DecisionTreeRegressor()
+    tree.fit(X_train_scaled, y_train)
+
+    arr = np.array([[dc, ft, f3, Vcm, pdiss]])
+    test_user_scaled = scaler.transform(arr)
+
+    predictions = tree.predict(test_user_scaled)
+    st.subheader('Prediction from Decision Tree Regressor')
+    st.write("Predicted Values are:", predictions)
+    st.write("Aspect Ratios are:", predictions * 2)
+
+
 # SIDEBAR
 st.sidebar.header('User Input Features')
 dc = st.sidebar.number_input('DC Gain')
@@ -111,6 +141,7 @@ selected_model = st.sidebar.selectbox('Select a Model', ['Linear Regression Mode
                                                          'Decision Tree Regressor', 'KNN', 'Random Forest Regressor',
                                                          'Neural Network (Best)'])
 
+
 if st.sidebar.button('Calculate'):
     # calculate(dc, ft, f3, Vcm, pdiss)
     if selected_model == 'Neural Network (Best)':
@@ -119,6 +150,10 @@ if st.sidebar.button('Calculate'):
         linear_regression()
     elif selected_model == 'Gaussian Regression Model':
         gaussian_regression_model()
+    elif selected_model == 'SVR':
+        svr()
+    elif selected_model == 'Decision Tree Regressor':
+        decision_tree_regressor()
 
 if st.sidebar.button('RESET'):
     pyautogui.hotkey("ctrl", "F5")
