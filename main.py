@@ -1,7 +1,7 @@
 import pickle
 
 import streamlit as st
-import pyautogui
+# import pyautogui
 import numpy as np
 from matplotlib import pyplot as plt
 import pandas as pd
@@ -188,8 +188,8 @@ if st.sidebar.button('Calculate'):
     elif selected_model == 'Random Forest Regressor':
         random_forest_regressor()
 
-if st.sidebar.button('RESET'):
-    pyautogui.hotkey("ctrl", "F5")
+# if st.sidebar.button('RESET'):
+#     pyautogui.hotkey("ctrl", "F5")
 
 # print(x)
 # print(y)
