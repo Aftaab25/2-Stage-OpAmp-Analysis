@@ -25,7 +25,7 @@ df = pd.read_csv('2STAGEOPAMP_DATASET.csv')
 columns = ['Is4','Gm6','Gm4','Asp_1','Asp_2','Asp_3','Asp_4','Asp_5','Abs_Gain','Delay']
 df.drop(columns,axis='columns',inplace=True)
 
-print(df.describe())
+# print(df.describe())
 
 # Split the Features and Labels and dividing into training and testing data
 labels = ['Wi1', 'Wi2', 'Wi3', 'Wi4', 'Wi5']
@@ -47,74 +47,35 @@ X_test_scaled = scaler.transform(X_test)
 y_train = y_train*(10**6)
 y_test = y_test*(10**6)
 
-# model = Sequential()
-# model.add(Dense(units=3000,kernel_initializer='he_uniform',activation='relu',input_dim=5))
-# #model.add(Dropout(0.4))
-# #model.add(BatchNormalization())
-# model.add(Dense(units=300,kernel_initializer='he_uniform',activation='relu'))
-# #model.add(BatchNormalization())
-# model.add(Dropout(0.01))
-# model.add(Dense(units=30,kernel_initializer='he_uniform',activation='relu'))
-# #model.add(BatchNormalization())
-# model.add(Dropout(0.01))
-# model.add(Dense(units=5,activation='linear'))
-# model.compile(optimizer='Adam',loss='mean_absolute_error',metrics=['mse'])
-# model.summary()
+# Linear Regression
+from sklearn import linear_model
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 
-new_model = load_model('model.h5')
+from sklearn.linear_model import Ridge
+ridge_reg = Ridge(alpha=0.005)
+ridge_reg.fit(X_train_scaled,y_train)
 
-# history = new_model.fit(X_train_scaled,y_train,validation_split=0.15,batch_size=10,epochs=2000)
+y_pred_ridge = ridge_reg.predict(X_test_scaled)
 
 
-
-# pickle.dump(model, open('model.pkl', 'wb'))
-
-# from matplotlib import pyplot as plt
-# loss = history.history['loss']
-# val_loss = history.history['val_loss']
-# epochs = range(1,len(loss)+1)
-# plt.plot(epochs,loss,'y',label='Training Loss')
-# plt.plot(epochs,val_loss,'r',label='Validation Loss')
-# plt.title('Training and Validation Loss')
-# plt.xlabel('Epochs')
-# plt.ylabel('Loss')
-# plt.legend()
-# plt.show()
-#
-# #%%
-# acc = history.history['mse']
-# val_acc = history.history['val_mse']
-# plt.plot(epochs,acc,'y',label='Training MSE')
-# plt.plot(epochs,val_acc,'r',label='Validation MSE')
-# plt.title('Training and Validation MSE')
-# plt.xlabel('Epochs')
-# plt.ylabel('Accuracy')
-# plt.legend()
-# plt.show()
-
-
-#%%
-mae_neural,mse_neural = new_model.evaluate(X_test_scaled,y_test)
-print("Mean Absolute Error:",mae_neural)
-print("Root Mean Squared Error:",mse_neural**0.5)
-print("Mean Squared Error:",mse_neural)
-
-#%%
-# Model Predictions
-predictions = new_model.predict(X_test_scaled[:5])
-print("Predicted Values are:",predictions)
-print("Real Values are:",y_test[:5])
-print("Aspect Ratios are:",predictions*2)
-
-#%%
-from sklearn.metrics import mean_squared_error
-y_pred = new_model.predict(X_test_scaled)
-np.sqrt(mean_squared_error(y_test,y_pred))
+mse_ridge_reg = mean_squared_error(y_test,y_pred_ridge)
+mae_ridge_reg = mean_absolute_error(y_test,y_pred_ridge)
+print("Mean Squared Error:",mse_ridge_reg)
+print("Root Mean Squared Error:",mse_ridge_reg**0.5)
+print("Mean Absolute Error:",mae_ridge_reg)
 from sklearn.metrics import r2_score
-print('R^2 Score :%.3f' % r2_score(y_test,y_pred))
-#%%
-#plt.scatter(y_test,y_pred)
-#%%
-r_squared = r2_score(y_test,y_pred)
-adjusted_r_squared = 1 - (1-r_squared)*(len(y)-1)/(len(y)-X.shape[1]-1)
-print('Adjusted R^Score : .%3f' %adjusted_r_squared)
+print('R^2 Score :%.3f' % r2_score(y_test,y_pred_ridge))
+
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.lines as mlines
+import matplotlib.transforms as mtransforms
+
+fig, ax = plt.subplots()
+ax.scatter(y_test, y_pred_ridge, c='black')
+line = mlines.Line2D([0, 1], [0, 1], color='red')
+transform = ax.transAxes
+line.set_transform(transform)
+ax.add_line(line)
+plt.show()
