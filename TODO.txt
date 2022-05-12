@@ -4,6 +4,7 @@
 4. Create pickle file for Guassian Model and then use that model for prediction. ------ -> DONE
     - Very Slow (Process Time : 4-5 minutes)
 5. Refactor Neural Network function -> parameters can be removed ---------------------- -> DONE
-6. KNN and Random Forest Model left --------------------------------------------------- ->
+6. KNN and Random Forest Model left --------------------------------------------------- -> DONE
 7. Add special notes/explanations where needed ---------------------------------------- ->
 8. Fix all the spelling errors -------------------------------------------------------- ->
+9. Deploy the project ----------------------------------------------------------------- -> DONE
