@@ -1,7 +1,12 @@
 import pickle
 import pandas as pd
+import numpy as np
+from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C, RationalQuadratic as RQ, WhiteKernel, \
+    ExpSineSquared as Exp, DotProduct as Lin
 
 df = pd.read_csv('2STAGEOPAMP_DATASET.csv')
 
@@ -30,7 +35,12 @@ X_test_scaled = scaler.transform(X_test)
 y_train = y_train*(10**6)
 y_test = y_test*(10**6)
 
-lr_model = pickle.load(open('lr_model.pkl', 'rb'))
-predictions = lr_model.predict(X_test_scaled[:5])
-y_pred_lr = lr_model.predict(X_test_scaled)
-print("Predicted Values are:",predictions)
+kernel = C() * RQ(length_scale=24, alpha=0.5, length_scale_bounds=(1e-05, 2))
+gp = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=6)
+gp.fit(X_train_scaled, y_train)
+
+arr = np.array([[23, 357678, 23455, 0.8, 0.0000450]])
+test_user_scaled = scaler.transform(arr)
+
+predictions = gp.predict(test_user_scaled)
+print(predictions)

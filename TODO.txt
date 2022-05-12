@@ -1,0 +1,5 @@
+1. Restrict predicted output to 3 decimel places
+2. Design a better home page + Clean UI
+3. Import every other ML model
+4. Create pickle file for Guassian Model and then use that model for prediction.
+    - Very Slow (Process Time : 4-5 minutes)
