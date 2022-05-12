@@ -7,6 +7,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C, RationalQuadratic as RQ, WhiteKernel, \
     ExpSineSquared as Exp, DotProduct as Lin
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+
 
 df = pd.read_csv('2STAGEOPAMP_DATASET.csv')
 
@@ -35,12 +37,15 @@ X_test_scaled = scaler.transform(X_test)
 y_train = y_train*(10**6)
 y_test = y_test*(10**6)
 
-kernel = C() * RQ(length_scale=24, alpha=0.5, length_scale_bounds=(1e-05, 2))
-gp = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=6)
-gp.fit(X_train_scaled, y_train)
+load_gaussian_model = pickle.load(open('gaussian_model.pkl', 'rb'))
 
-arr = np.array([[23, 357678, 23455, 0.8, 0.0000450]])
-test_user_scaled = scaler.transform(arr)
+y_pred_gp = load_gaussian_model.predict(X_test_scaled)
 
-predictions = gp.predict(test_user_scaled)
-print(predictions)
+mse_gp = mean_squared_error(y_test, y_pred_gp)
+mae_gp = mean_absolute_error(y_test, y_pred_gp)
+print("Mean Squared Error:", mse_gp)
+print("Root Mean Squared Error:", mse_gp ** 0.5)
+print("Mean Absolute Error:", mae_gp)
+from sklearn.metrics import r2_score
+
+print('R^2 Score :%.3f' % r2_score(y_test, y_pred_gp))

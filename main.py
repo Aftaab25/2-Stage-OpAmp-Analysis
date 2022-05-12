@@ -1,3 +1,5 @@
+import pickle
+
 import streamlit as st
 import pyautogui
 import numpy as np
@@ -6,7 +8,9 @@ import pandas as pd
 import keras
 
 from sklearn import linear_model
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from sklearn.gaussian_process import GaussianProcessRegressor
@@ -55,7 +59,7 @@ y_test = y_test * (10 ** 6)
 
 
 # Neural Network
-def neural_network(dc, ft, f3, Vcm, pdiss):
+def neural_network():
     arr = np.array([[dc, ft, f3, Vcm, pdiss]])
     test_user_scaled = scaler.transform(arr)
     # st.write(test_user_scaled)
@@ -88,14 +92,12 @@ def linear_regression():
 
 
 def gaussian_regression_model():
-    kernel = C() * RQ(length_scale=24, alpha=0.5, length_scale_bounds=(1e-05, 2))
-    gp = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=6)
-    gp.fit(X_train_scaled, y_train)
+    load_gaussian_model = pickle.load(open('gaussian_model.pkl', 'rb'))
 
     arr = np.array([[dc, ft, f3, Vcm, pdiss]])
     test_user_scaled = scaler.transform(arr)
 
-    predictions = gp.predict(test_user_scaled)
+    predictions = load_gaussian_model.predict(test_user_scaled)
 
     st.subheader('Prediction from Gaussian Regression Model')
     st.write("Predicted Values are:", predictions)
@@ -129,6 +131,33 @@ def decision_tree_regressor():
     st.write("Aspect Ratios are:", predictions * 2)
 
 
+def knn():
+    knn = KNeighborsRegressor(n_neighbors=4)
+    knn.fit(X_train_scaled, y_train)
+
+    arr = np.array([[dc, ft, f3, Vcm, pdiss]])
+    test_user_scaled = scaler.transform(arr)
+
+    predictions = knn.predict(test_user_scaled)
+    st.subheader('Prediction from KNN')
+    st.write("Predicted Values are:", predictions)
+    st.write("Aspect Ratios are:", predictions * 2)
+
+
+def random_forest_regressor():
+    model_RF = RandomForestRegressor(n_estimators=300, random_state=10)
+    model_RF.fit(X_train_scaled, y_train)
+
+    arr = np.array([[dc, ft, f3, Vcm, pdiss]])
+    test_user_scaled = scaler.transform(arr)
+
+    predictions = model_RF.predict(test_user_scaled)
+
+    st.subheader('Prediction from Random Forest Regressor')
+    st.write("Predicted Values are:", predictions)
+    st.write("Aspect Ratios are:", predictions * 2)
+
+
 # SIDEBAR
 st.sidebar.header('User Input Features')
 dc = st.sidebar.number_input('DC Gain')
@@ -145,7 +174,7 @@ selected_model = st.sidebar.selectbox('Select a Model', ['Linear Regression Mode
 if st.sidebar.button('Calculate'):
     # calculate(dc, ft, f3, Vcm, pdiss)
     if selected_model == 'Neural Network (Best)':
-        neural_network(dc, ft, f3, Vcm, pdiss)
+        neural_network()
     elif selected_model == 'Linear Regression Model':
         linear_regression()
     elif selected_model == 'Gaussian Regression Model':
@@ -154,6 +183,10 @@ if st.sidebar.button('Calculate'):
         svr()
     elif selected_model == 'Decision Tree Regressor':
         decision_tree_regressor()
+    elif selected_model == 'KNN':
+        knn()
+    elif selected_model == 'Random Forest Regressor':
+        random_forest_regressor()
 
 if st.sidebar.button('RESET'):
     pyautogui.hotkey("ctrl", "F5")

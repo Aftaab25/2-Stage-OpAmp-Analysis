@@ -52,30 +52,24 @@ from sklearn import linear_model
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
-from sklearn.linear_model import Ridge
-ridge_reg = Ridge(alpha=0.005)
-ridge_reg.fit(X_train_scaled,y_train)
+# Gaussian Process Regression
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import RBF, ConstantKernel as C, RationalQuadratic as RQ, WhiteKernel, \
+    ExpSineSquared as Exp, DotProduct as Lin
 
-y_pred_ridge = ridge_reg.predict(X_test_scaled)
+kernel = C() * RQ(length_scale=24, alpha=0.5, length_scale_bounds=(1e-05, 2))
+gp = GaussianProcessRegressor(kernel=kernel, n_restarts_optimizer=6)
+gp.fit(X_train_scaled, y_train)
 
+pickle.dump(gp, open('gaussian_model.pkl', 'wb'))
 
-mse_ridge_reg = mean_squared_error(y_test,y_pred_ridge)
-mae_ridge_reg = mean_absolute_error(y_test,y_pred_ridge)
-print("Mean Squared Error:",mse_ridge_reg)
-print("Root Mean Squared Error:",mse_ridge_reg**0.5)
-print("Mean Absolute Error:",mae_ridge_reg)
+y_pred_gp = gp.predict(X_test_scaled)
+
+mse_gp = mean_squared_error(y_test, y_pred_gp)
+mae_gp = mean_absolute_error(y_test, y_pred_gp)
+print("Mean Squared Error:", mse_gp)
+print("Root Mean Squared Error:", mse_gp ** 0.5)
+print("Mean Absolute Error:", mae_gp)
 from sklearn.metrics import r2_score
-print('R^2 Score :%.3f' % r2_score(y_test,y_pred_ridge))
 
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.lines as mlines
-import matplotlib.transforms as mtransforms
-
-fig, ax = plt.subplots()
-ax.scatter(y_test, y_pred_ridge, c='black')
-line = mlines.Line2D([0, 1], [0, 1], color='red')
-transform = ax.transAxes
-line.set_transform(transform)
-ax.add_line(line)
-plt.show()
+print('R^2 Score :%.3f' % r2_score(y_test, y_pred_gp))
