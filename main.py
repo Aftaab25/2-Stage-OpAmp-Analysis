@@ -33,7 +33,7 @@ st.header('Aspect Ration Estimation of a Two-Stage Operational Amplifier')
 df = pd.read_csv('2STAGEOPAMP_DATASET.csv')
 st.subheader('Description of the Dataset')
 st.markdown("""
-[Dataset used can be found here](https://github.com/Aftaab25/Penguins-Species-Prediction/blob/master/penguins_cleaned.csv)
+[Dataset used can be found here](https://github.com/Aftaab25/2-Stage-OpAmp-Analysis/blob/master/2STAGEOPAMP_DATASET.csv)
 """)
 
 columns = ['Is4', 'Gm6', 'Gm4', 'Asp_1', 'Asp_2', 'Asp_3', 'Asp_4', 'Asp_5', 'Abs_Gain', 'Delay']
