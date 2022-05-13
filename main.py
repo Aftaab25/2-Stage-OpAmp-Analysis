@@ -164,7 +164,7 @@ def random_forest_regressor():
 
 # SIDEBAR
 st.sidebar.header('User Input Features')
-# st.sidebar.write('*Make sure to use values that complies with the rules of 180nm technology')
+st.sidebar.caption('*Kindly make sure that the aspect ratios meet the requirements of the technology before designing.')
 dc = st.sidebar.number_input('DC Gain')
 ft = st.sidebar.number_input('Unity Gain Frequency (ft)')
 f3 = st.sidebar.number_input('3-dB Frequency (f3)')
