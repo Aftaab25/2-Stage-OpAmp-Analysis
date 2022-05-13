@@ -71,7 +71,7 @@ def neural_network():
     model = load_model('model.h5')
     predictions = model.predict(test_user_scaled)
 
-    st.subheader('Working with the Neural Network (Best Results)')
+    st.subheader('Predictions from the Neural Network (Best Results)')
     # predictions = model.predict(arr)
     st.write("Predicted Values are:", predictions)
     # st.write("Real Values are:",y_test[:5])
