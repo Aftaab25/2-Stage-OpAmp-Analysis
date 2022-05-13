@@ -32,6 +32,10 @@ st.header('Aspect Ration Estimation of a Two-Stage Operational Amplifier')
 # Reading the data
 df = pd.read_csv('2STAGEOPAMP_DATASET.csv')
 st.subheader('Description of the Dataset')
+st.markdown("""
+[Dataset used can be found here](https://github.com/Aftaab25/Penguins-Species-Prediction/blob/master/penguins_cleaned.csv)
+""")
+
 columns = ['Is4', 'Gm6', 'Gm4', 'Asp_1', 'Asp_2', 'Asp_3', 'Asp_4', 'Asp_5', 'Abs_Gain', 'Delay']
 df.drop(columns, axis='columns', inplace=True)
 
@@ -160,11 +164,12 @@ def random_forest_regressor():
 
 # SIDEBAR
 st.sidebar.header('User Input Features')
+# st.sidebar.write('*Make sure to use values that complies with the rules of 180nm technology')
 dc = st.sidebar.number_input('DC Gain')
-ft = st.sidebar.number_input('ft')
-f3 = st.sidebar.number_input('f3')
-Vcm = st.sidebar.number_input('Vcm')
-pdiss = st.sidebar.number_input('PDiss', step=1e-6, format="%.7f")
+ft = st.sidebar.number_input('Unity Gain Frequency (ft)')
+f3 = st.sidebar.number_input('3-dB Frequency (f3)')
+Vcm = st.sidebar.number_input('Common Mode Voltage (Vcm)')
+pdiss = st.sidebar.number_input('Power Dissipation (PDiss)', step=1e-6, format="%.7f")
 
 selected_model = st.sidebar.selectbox('Select a Model', ['Linear Regression Model', 'Gaussian Regression Model', 'SVR',
                                                          'Decision Tree Regressor', 'KNN', 'Random Forest Regressor',
