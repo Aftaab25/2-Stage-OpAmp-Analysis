@@ -27,7 +27,7 @@ from sklearn.tree import DecisionTreeRegressor
 st.set_page_config(layout="wide")
 
 # Header for the main Content
-st.header('Aspect Ration Estimation of a Two-Stage Operational Amplifier')
+st.header('Aspect Ratio Estimation of a Two-Stage Operational Amplifier')
 
 # Reading the data
 df = pd.read_csv('2STAGEOPAMP_DATASET.csv')
