@@ -27,8 +27,8 @@ This repository contains a Streamlit web application that estimates the aspect r
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/2-stage-opamp-aspect-ratio.git
-   cd 2-stage-opamp-aspect-ratio
+   git clone https://github.com/Aftaab25/2-Stage-OpAmp-Analysis.git
+   cd 2-Stage-OpAmp-Analysis
    ```
 
 2. Install the required packages:
